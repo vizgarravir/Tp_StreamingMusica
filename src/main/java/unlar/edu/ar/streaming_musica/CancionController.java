@@ -34,7 +34,7 @@ catalogo.agregarCancion(new Cancion("Cruel Summer", "Taylor Swift", "Lover", "PO
         .filter(c -> artista == null || c.getArtista().contains(artista))
         .toList();
     }
-    @PostMapping("/{id}/reproducir")
+    @GetMapping("/{id}/reproducir")
         public String reproducir(@PathVariable String id) {
         catalogo.getCanciones().stream()
             .filter(c -> c.getId().equals(id))
@@ -42,5 +42,27 @@ catalogo.agregarCancion(new Cancion("Cruel Summer", "Taylor Swift", "Lover", "PO
             .ifPresent(Cancion::reproducir);
         return "Reproducción registrada";
     }
+    // GET /api/canciones/estadisticas/promedio-por-genero
+@GetMapping("/estadisticas/promedio-por-genero")
+public double promedioPorGenero(@RequestParam String genero) {
+    return catalogo.promedioDuracionPorGenero(genero);
+}
+
+// GET /api/canciones/estadisticas/artista-mas-popular
+@GetMapping("/estadisticas/artista-mas-popular")
+public String artistaMasPopular() {
+    return catalogo.getCanciones().stream()
+        .max((a, b) -> Integer.compare(
+            a.getReproducciones().get(),
+            b.getReproducciones().get()))
+        .map(Cancion::getArtista)
+        .orElse("Sin datos");
+}
+
+// GET /api/canciones/top10
+@GetMapping("/top10")
+public List<Cancion> top10() {
+    return catalogo.top10MasReproducidas();
+}
 
 }
