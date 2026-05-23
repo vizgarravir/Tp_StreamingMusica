@@ -34,7 +34,7 @@ catalogo.agregarCancion(new Cancion("Cruel Summer", "Taylor Swift", "Lover", "PO
         .filter(c -> artista == null || c.getArtista().contains(artista))
         .toList();
     }
-    @GetMapping("/{id}/reproducir")
+   @PostMapping("/{id}/reproducir")
         public String reproducir(@PathVariable String id) {
         catalogo.getCanciones().stream()
             .filter(c -> c.getId().equals(id))
@@ -63,6 +63,18 @@ public String artistaMasPopular() {
 @GetMapping("/top10")
 public List<Cancion> top10() {
     return catalogo.top10MasReproducidas();
+}
+@GetMapping("/busqueda-binaria")
+public Cancion busquedaBinaria(@RequestParam String titulo) {
+    return catalogo.busquedaBinariaPorTitulo(titulo);
+}
+@GetMapping("/ordenar")
+public List<Cancion> ordenar() {
+    return catalogo.ordenarPorArtistaYFecha();
+}
+@GetMapping("/estadisticas/distribucion-decadas")
+public java.util.Map<String, Long> distribucionDecadas() {
+    return catalogo.distribucionPorDecadas();
 }
 
 }
